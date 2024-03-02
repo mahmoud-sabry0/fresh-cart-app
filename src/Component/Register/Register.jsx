@@ -8,29 +8,28 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState('');
-  let navigate = useNavigate()
+  const [apiError, setApiError] = useState("");
+  let navigate = useNavigate();
 
   async function registerSubmit(values) {
-    setLoading(true)
-    let { data } = await axios.post("https://ecommerce.routemisr.com/api/v1/auth/signup", values)
-    .then(res => {
-      setApiError(false)
-
-    })
-    .catch((err) => {
-        console.log("🚀 ~ loginSubmit ~ err:", err)
-        setApiError(err.response.data.message)
+    setLoading(true);
+    let { data } = await axios
+      .post("https://ecommerce.routemisr.com/api/v1/auth/signup", values)
+      .then((res) => {
+        setApiError(false);
+      })
+      .catch((err) => {
+        console.log("🚀 ~ loginSubmit ~ err:", err);
+        setApiError(err.response.data.message);
       })
       .finally((res) => {
-        setLoading(false)
-       
-        navigate('/')
-      })
+        setLoading(false);
+      
+        navigate("/");
+      });
 
-
-    if (data.message =='success') {
-      setLoading(false)
+    if (data.message == "success") {
+      setLoading(false);
       navigate("/login");
     }
   }
@@ -50,7 +49,7 @@ export default function Register() {
     phone: Yup.string()
       .required(" phone is required")
       .matches(/^01[0125][0-9]{8}$/, "we need egyptain number"),
-  })
+  });
 
   let formik = useFormik({
     initialValues: {
@@ -63,7 +62,8 @@ export default function Register() {
     validationSchema,
     onSubmit: registerSubmit,
   });
-  return  <>
+  return (
+    <>
       <div className="w-75 mx-outo py-4">
         <h2>Register Naw</h2>
         <form onSubmit={formik.handleSubmit}>
@@ -136,13 +136,25 @@ export default function Register() {
             <div className="alert alert-danger py-2">{formik.errors.phone}</div>
           ) : null}
 
-{loading ? <button  type="button" className="btn bg-dark text-light " > <ClockLoader color="#36d7b7" /> </button> : <button disabled={!(formik.isValid && formik.dirty)} type="submit" className="btn bg-dark text-light" >
-             login
+          {loading ? (
+            <button type="button" className="btn bg-dark text-light ">
+              {" "}
+              <ClockLoader color="#36d7b7" />{" "}
             </button>
-          }
-          <Link className="ps-3 "to={'/login'}>Login Now</Link>
+          ) : (
+            <button
+              disabled={!(formik.isValid && formik.dirty)}
+              type="submit"
+              className="btn bg-dark text-light"
+            >
+              Register
+            </button>
+          )}
+          <Link  className="ps-3 link btn bg-dark text-light" to={"/login"}>
+            Login Now
+          </Link>
         </form>
       </div>
     </>
- 
+  );
 }

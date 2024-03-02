@@ -11,3 +11,87 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.product:hover{
+  box-shadow: 2px blue;
+  border:solid 1px blue ;
+  
+}
+
+.product .btn{
+ 
+  transition: all 1s;
+  transform: translateY(100%);
+  opacity: 0;
+}
+.product:hover .btn{
+  opacity: 1;
+  transform: translateY(0);
+  }
+.font-sm i{
+  font-size: 20px;
+  color: rgb(255, 255, 0);
+}  
+.details{
+  text-decoration: none;
+}
+.product span{
+  text-decoration: none;
+  color: black;
+}
+.product{
+  color: black;
+}
+.link{
+  text-decoration: none;
+}
+.bi-star{
+  padding: 0;
+}
+
+.teshart{
+  padding-top: 50px;
+}
+.loadeng{
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255, 0.7);
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  z-index: 99999;
+}
+.count .btn{
+  border:solid blue;
+}
+.Slider{
+  padding-top: 100px;
+
+}
+.bg-primary-light .nul{
+  text-align: center;
+  justify-content: center;
+ padding-top: 200px;
+}
+.row .mata:hover{
+  border: solid 1px blue;
+ border-radius: 10px;
+}
+.bse{
+
+  padding-top: 20px;
+}
+.img .titl{
+  text-align: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+ .col-md-3 .product:hover{
+  border: solid 2px blue;
+  border-radius: 10px;
+}
+.navbar-nav .nav-item Link{
+  text-decoration: none;
+}
