@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/fresh-cart-app/static/css/main.88f2ad4b.css",
+    "main.js": "/fresh-cart-app/static/js/main.8a47f1c8.js",
+    "static/js/592.c1daba1f.chunk.js": "/fresh-cart-app/static/js/592.c1daba1f.chunk.js",
+    "static/media/moonlightn_eyhx4uy9.gif": "/fresh-cart-app/static/media/moonlightn_eyhx4uy9.b0ffe64657aa953de59b.gif",
+    "static/media/bootstrap-icons.woff?": "/fresh-cart-app/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/bootstrap-icons.woff2?": "/fresh-cart-app/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
+    "static/media/logo-main.png": "/fresh-cart-app/static/media/logo-main.ec67d3cf916c55029264.png",
+    "static/media/mahmou1 (3).jpg": "/fresh-cart-app/static/media/mahmou1 (3).96a08320f0007d30af67.jpg",
+    "static/media/mahmou1 (4).jpg": "/fresh-cart-app/static/media/mahmou1 (4).941f444ea4800c7f2e40.jpg",
+    "static/media/slick.svg": "/fresh-cart-app/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/fresh-cart-app/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/fresh-cart-app/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/fresh-cart-app/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/fresh-cart-app/index.html",
+    "main.88f2ad4b.css.map": "/fresh-cart-app/static/css/main.88f2ad4b.css.map",
+    "main.8a47f1c8.js.map": "/fresh-cart-app/static/js/main.8a47f1c8.js.map",
+    "592.c1daba1f.chunk.js.map": "/fresh-cart-app/static/js/592.c1daba1f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88f2ad4b.css",
+    "static/js/main.8a47f1c8.js"
+  ]
+}
