@@ -1,28 +1,22 @@
-
 .navbar-brand .imgs{
    width: 120px;
    height: 40px;
-   padding-top: 5px;
-  
+   object-fit: contain;
 }
 .navbar-nav .nav-item{
-    margin-left: 15px;
-    font-weight: 600;
-    font-size: larger;
+   font-weight: 600;
 }
-.collapse .navbar-nav .icon i{
- 
-   padding-right: 10px;
+@media (min-width: 992px){
+   .navbar-nav .nav-item{
+      margin-left: 15px;
+   }
 }
-.collapse .navbar-nav .icon{
-   padding-top: 10px;
+.cart-link i{
+   font-size: 1.3rem;
 }
-.navbar-brand{
-   padding-left: 100px;
-}
- .navbar-nav {
-   padding-right: 100px;
-
+.cart-link .badge{
+   font-size: 0.7rem;
+   vertical-align: top;
 }
 .nav-item .cursor-pointer{
    cursor: pointer;

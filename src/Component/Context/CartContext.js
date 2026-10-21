@@ -1,81 +1,50 @@
-import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { api, safeRequest } from "../../Api/api";
+import { UserContext } from "./UserContext";
 
 export let CartContext = createContext();
 
+// defined outside the provider so their identity is stable across renders
+function checkOutSession(cartId, shippingAddress) {
+  // the API redirects to `${url}/allorders` after a successful payment
+  const returnUrl = window.location.origin + process.env.PUBLIC_URL;
+  return safeRequest(
+    api.post(
+      `/orders/checkout-session/${cartId}?url=${encodeURIComponent(returnUrl)}`,
+      { shippingAddress }
+    )
+  );
+}
+
+function addToCart(productId) {
+  return safeRequest(api.post(`/cart`, { productId }));
+}
+
+function getCartItems() {
+  return safeRequest(api.get(`/cart`));
+}
+
+function deleteCartItems(productId) {
+  return safeRequest(api.delete(`/cart/${productId}`));
+}
+
+function updateCartItems(productId, count) {
+  return safeRequest(api.put(`/cart/${productId}`, { count }));
+}
+
 export default function CartContextProvider(props) {
-  const [numOfCartItems, setNumOfCartItems] = useState(null);
-  let headers = { token: localStorage.getItem("userToken") };
+  const [numOfCartItems, setNumOfCartItems] = useState(0);
+  const { userToken } = useContext(UserContext);
 
-  console.log("🚀 ~ CartContextProvider ~ headers:", headers);
-  async function checkOutSession(cartId, shippingAddress) {
-    return axios
-      .post(
-        `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}url=http://localhost:3000`,
-        {
-          shippingAddress,
-        },
-        { headers }
-      )
-      .then((response) => response)
-      .catch((err) => err);
-  }
-  async function addToCart(id) {
-    return axios
-      .post(
-        `https://ecommerce.routemisr.com/api/v1/cart`,
-        { productId: id },
-        { headers }
-      )
-      .then((response) => response)
-      .catch((err) => err);
-  }
-
-  async function getCartItems() {
-    return axios
-      .get(`https://ecommerce.routemisr.com/api/v1/cart`, { headers })
-      .then((response) => response)
-      .catch((err) => err);
-  }
-
-  async function deleteCartItems(productId, count) {
-    if (count)
-      return axios
-        .delete(
-          `https://ecommerce.routemisr.com/api/v1/cart/${productId}`,
-          { count },
-          { headers }
-        )
-        .then((response) => response)
-        .catch((err) => err);
-
-    return axios
-      .delete(`https://ecommerce.routemisr.com/api/v1/cart/${productId}`, {
-        headers,
-      })
-      .then((response) => response)
-      .catch((err) => err);
-  }
-
-  async function UpdataCartItems(productId, count) {
-    return axios
-      .put(
-        `https://ecommerce.routemisr.com/api/v1/cart/${productId}`,
-        { count },
-        { headers }
-      )
-      .then((response) => response)
-      .catch((err) => err);
-  }
-
-  async function gatUserCart() {
-    let { data } = await getCartItems();
-    console.log(data);
-    setNumOfCartItems(data?.numOfCartItems || 0);
-  }
-  useEffect(() => {
-    gatUserCart();
+  const refreshCartCount = useCallback(async () => {
+    const { data } = await getCartItems();
+    setNumOfCartItems(data?.status === "success" ? data.numOfCartItems : 0);
   }, []);
+
+  useEffect(() => {
+    if (userToken) refreshCartCount();
+    else setNumOfCartItems(0);
+  }, [userToken, refreshCartCount]);
 
   return (
     <CartContext.Provider
@@ -83,10 +52,11 @@ export default function CartContextProvider(props) {
         addToCart,
         getCartItems,
         deleteCartItems,
-        UpdataCartItems,
+        updateCartItems,
         checkOutSession,
         numOfCartItems,
         setNumOfCartItems,
+        refreshCartCount,
       }}
     >
       {props.children}

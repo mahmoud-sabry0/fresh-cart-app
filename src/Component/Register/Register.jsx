@@ -1,53 +1,64 @@
 import "./Register.module.css";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { ClockLoader } from "react-spinners";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { api, getErrorMessage } from "../../Api/api";
+import { UserContext } from "../Context/UserContext";
+
+const fields = [
+  { name: "name", label: "Name", type: "text", autoComplete: "name" },
+  { name: "email", label: "Email", type: "email", autoComplete: "email" },
+  { name: "password", label: "password", type: "password", autoComplete: "new-password" },
+  { name: "rePassword", label: "rePassword", type: "password", autoComplete: "new-password" },
+  { name: "phone", label: "phone", type: "tel", autoComplete: "tel" },
+];
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
   let navigate = useNavigate();
+  let { userToken, setUserToken } = useContext(UserContext);
 
   async function registerSubmit(values) {
     setLoading(true);
-    let { data } = await axios
-      .post("https://ecommerce.routemisr.com/api/v1/auth/signup", values)
-      .then((res) => {
-        setApiError(false);
-      })
-      .catch((err) => {
-        console.log("🚀 ~ loginSubmit ~ err:", err);
-        setApiError(err.response.data.message);
-      })
-      .finally((res) => {
-        setLoading(false);
-      
+    setApiError("");
+    try {
+      const { data } = await api.post("/auth/signup", values);
+      toast.success("Account created successfully");
+      // signup returns a token, so log the user straight in
+      if (data?.token) {
+        localStorage.setItem("userToken", data.token);
+        setUserToken(data.token);
         navigate("/");
-      });
-
-    if (data.message == "success") {
+      } else {
+        navigate("/login");
+      }
+    } catch (err) {
+      setApiError(getErrorMessage(err));
+    } finally {
       setLoading(false);
-      navigate("/login");
     }
   }
 
+  // mirrors the API's own rules, so valid input is never rejected client-side
   let validationSchema = Yup.object({
     name: Yup.string()
+      .trim()
       .required("Name is required")
       .min(3, "min length is 3")
-      .max(10, "max length is 10"),
-    email: Yup.string().required("email is required").email("invalid email"),
+      .max(50, "max length is 50"),
+    email: Yup.string().trim().required("email is required").email("invalid email"),
     password: Yup.string()
       .required("password is required")
-      .matches(/^[A-Z][\w @]{5,8}$/, "invalid password ex(Ahmed123)"),
+      .min(6, "password must be at least 6 characters"),
     rePassword: Yup.string()
       .required("rePassword is required")
       .oneOf([Yup.ref("password")], "password and rePassword dont match"),
     phone: Yup.string()
-      .required(" phone is required")
+      .required("phone is required")
       .matches(/^01[0125][0-9]{8}$/, "we need egyptain number"),
   });
 
@@ -60,97 +71,46 @@ export default function Register() {
       phone: "",
     },
     validationSchema,
-    onSubmit: registerSubmit,
+    onSubmit: (values) =>
+      registerSubmit({ ...values, name: values.name.trim(), email: values.email.trim() }),
   });
+
+  if (userToken) return <Navigate to={"/"} replace />;
+
   return (
     <>
-      <div className="w-75 mx-outo py-4">
-        <h2>Register Naw</h2>
-        <form onSubmit={formik.handleSubmit}>
+      <div className="w-75 mx-auto py-4">
+        <h2>Register Now</h2>
+        <form onSubmit={formik.handleSubmit} noValidate>
           {apiError ? <div className="alert alert-danger">{apiError}</div> : ""}
-          <label htmlFor="name">Name :</label>
-          <input
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            type="text"
-            id="name"
-            name="name"
-            className="form-control mb-3"
-          />
-          {formik.errors.name && formik.touched.name ? (
-            <div className="alert alert-danger py-2">{formik.errors.name}</div>
-          ) : null}
 
-          <label htmlFor="email">Email :</label>
-          <input
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            type="email"
-            id="email"
-            name="email"
-            className="form-control mb-3"
-          />
-          {formik.errors.email && formik.touched.email ? (
-            <div className="alert alert-danger py-2">{formik.errors.email}</div>
-          ) : null}
-          <label htmlFor="password">password :</label>
-          <input
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            type="password"
-            id="password"
-            name="password"
-            className="form-control mb-3"
-          />
-          {formik.errors.password && formik.touched.password ? (
-            <div className="alert alert-danger py-2">
-              {formik.errors.password}
+          {fields.map(({ name, label, type, autoComplete }) => (
+            <div key={name}>
+              <label htmlFor={name}>{label} :</label>
+              <input
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values[name]}
+                type={type}
+                id={name}
+                name={name}
+                autoComplete={autoComplete}
+                className="form-control mb-3"
+              />
+              {formik.errors[name] && formik.touched[name] ? (
+                <div className="alert alert-danger py-2">{formik.errors[name]}</div>
+              ) : null}
             </div>
-          ) : null}
+          ))}
 
-          <label htmlFor="rePassword"> rePassword :</label>
-          <input
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            type="password"
-            id="rePassword"
-            name="rePassword"
-            className="form-control mb-3"
-          />
-          {formik.errors.rePassword && formik.touched.rePassword ? (
-            <div className="alert alert-danger py-2">
-              {formik.errors.rePassword}
-            </div>
-          ) : null}
-
-          <label htmlFor="  phone"> phone :</label>
-          <input
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            type="tel"
-            id="phone"
-            name="phone"
-            className="form-control mb-3"
-          />
-          {formik.errors.phone && formik.touched.phone ? (
-            <div className="alert alert-danger py-2">{formik.errors.phone}</div>
-          ) : null}
-
-          {loading ? (
-            <button type="button" className="btn bg-dark text-light ">
-              {" "}
-              <ClockLoader color="#36d7b7" />{" "}
-            </button>
-          ) : (
-            <button
-              disabled={!(formik.isValid && formik.dirty)}
-              type="submit"
-              className="btn bg-dark text-light"
-            >
-              Register
-            </button>
-          )}
-          <Link  className="ps-3 link btn bg-dark text-light" to={"/login"}>
+          <button
+            disabled={loading}
+            type="submit"
+            className="btn bg-dark text-light"
+          >
+            {loading ? <ClockLoader color="#36d7b7" size={20} /> : "Register"}
+          </button>
+          <Link className="ms-3 link btn bg-dark text-light" to={"/login"}>
             Login Now
           </Link>
         </form>

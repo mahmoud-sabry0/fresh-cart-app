@@ -1,5 +1,7 @@
 body {
   margin: 0;
+  /* room for the fixed-top navbar */
+  padding-top: 64px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -11,22 +13,85 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.product{
+  border: 1px solid var(--bs-border-color);
+  border-radius: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
 .product:hover{
-  box-shadow: 2px blue;
-  border:solid 1px blue ;
-  
+  border-color: var(--bs-primary);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
-
-.product .btn{
- 
-  transition: all 1s;
-  transform: translateY(100%);
+.product .link{
+  color: inherit;
+}
+.product-img-wrap{
+  /* the API's product images are 660x900, so this shows them whole with no gaps */
+  aspect-ratio: 11 / 15;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+.product-img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* hidden until fully downloaded, so a half-painted image never looks cropped */
   opacity: 0;
+  transition: opacity 0.3s;
 }
-.product:hover .btn{
+.product-img.loaded{
   opacity: 1;
-  transform: translateY(0);
+}
+.product .product-category{
+  font-size: 0.8rem;
+  color: var(--bs-primary);
+  margin-top: 0.5rem;
+}
+.product-title{
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0.25rem 0 0;
+  /* always two lines, so every card in a row lines up */
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.product .product-price{
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.product-rating{
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.product-rating i{
+  color: #f5b301;
+}
+.product-wishlist{
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 1.1rem;
+}
+.product .add-to-cart{
+  transition: opacity 0.3s, transform 0.3s;
+}
+/* reveal-on-hover only where a mouse exists; touch screens always show the button */
+@media (hover: hover) and (pointer: fine){
+  .product .add-to-cart{
+    opacity: 0;
+    transform: translateY(8px);
   }
+  .product:hover .add-to-cart,
+  .product:focus-within .add-to-cart{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .font-sm i{
   font-size: 20px;
   color: rgb(255, 255, 0);
@@ -48,9 +113,6 @@ code {
   padding: 0;
 }
 
-.teshart{
-  padding-top: 50px;
-}
 .loadeng{
   position: fixed;
   top: 0;
@@ -67,8 +129,35 @@ code {
   border:solid blue;
 }
 .Slider{
-  padding-top: 100px;
-
+  padding-top: 1rem;
+}
+.main-slide{
+  width: 100%;
+  height: 400px;
+  object-fit: contain;
+}
+.side-slide{
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+}
+.category-slide img{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.category-slide h4{
+  font-size: 1rem;
+  text-align: center;
+  padding-top: 0.5rem;
+}
+@media (max-width: 767.98px){
+  .main-slide{
+    height: 220px;
+  }
+  .category-slide img{
+    height: 120px;
+  }
 }
 .bg-primary-light .nul{
   text-align: center;
